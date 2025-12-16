@@ -6,6 +6,7 @@ export class DirCommand implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'Directory Command Runner',
     name: 'dirCommandRunner',
+    icon: 'file:public/icon.svg',
     group: ['transform'],
     version: 1,
     description: 'Run one or multiple shell commands inside a directory if it exists',

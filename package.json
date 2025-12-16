@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Run shell commands inside directories if they exist",
   "scripts": {
-    "build": "tsc",
-    "publish-local": "tsc && grunt"
+    "build": "tsc && cp -R n8n-nodes/*/nodes/public dist/n8n-nodes/*/nodes",
+    "publish-local": "npm run build && grunt"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",

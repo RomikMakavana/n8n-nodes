@@ -127,6 +127,10 @@ n8n-custom-nodes/
 - **Output**: `dist/n8n-nodes/[node-name]/nodes/[NodeName].node.js`
 - **Configuration**: `tsconfig.json`
 
+### `public` directory
+- Each node have `public` folder, that can contains public assets need to use inside command like icon, image etc..
+- So, when run build command it will automatically copy public directory with it
+
 ### Package Generation
 The Grunt build system automatically:
 1. Scans for compiled `.node.js` files

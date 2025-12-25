@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Run shell commands inside directories if they exist",
   "scripts": {
-    "build": "tsc && cp -R n8n-nodes/*/nodes/public dist/n8n-nodes/*/nodes",
+    "build": "tsc",
     "publish-local": "npm run build && grunt"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",
     "dotenv": "^17.2.3",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-symlink": "^1.0.0",
     "typescript": "^5.3.0"
   },

@@ -24,10 +24,19 @@ module.exports = function (grunt) {
 
   // Project configuration
   grunt.initConfig({
-    symlink: symlinkConfig
+    symlink: symlinkConfig,
+    copy: {
+      assets: {
+        expand: true,
+        cwd: 'n8n-nodes',
+        src: ['**/public/**/*'],
+        dest: 'dist/n8n-nodes'
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-symlink');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerTask('generatePackageJson', 'Generate package.json for N8N nodes', function () {
     const n8nNodesPath = path.join(sourceFolder);
@@ -72,5 +81,5 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('default', ['generatePackageJson', 'symlink']);
+  grunt.registerTask('default', ['generatePackageJson', 'copy', 'symlink']);
 };

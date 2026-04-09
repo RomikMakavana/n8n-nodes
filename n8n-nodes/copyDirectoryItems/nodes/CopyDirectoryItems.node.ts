@@ -54,13 +54,13 @@ export class CopyDirectoryItems implements INodeType {
         const itemsToCopy = this.getNodeParameter('itemsToCopy', i, []) as string[];
 
         // Check if source directory exists
-        if (!fs.existsSync(sourceDirectory)) {
+        if (!await fs.existsSync(sourceDirectory)) {
             throw new Error(`Source directory does not exist: ${sourceDirectory}`);
         }
 
         // Ensure destination directory exists
-        if (!fs.existsSync(destinationDirectory)) {
-            fs.mkdirSync(destinationDirectory, { recursive: true });
+        if (!await fs.existsSync(destinationDirectory)) {
+            await fs.mkdirSync(destinationDirectory, { recursive: true });
         }
 
         const copiedItems: string[] = [];
@@ -69,22 +69,22 @@ export class CopyDirectoryItems implements INodeType {
             const sourcePath = path.join(sourceDirectory, item);
             const destPath = path.join(destinationDirectory, item);
 
-            if (!fs.existsSync(sourcePath)) {
+            if (!await fs.existsSync(sourcePath)) {
                 throw new Error(`Item does not exist in source directory: ${item}`);
             }
 
             // Delete first if exists in destination
-            if (fs.existsSync(destPath)) {
-              const stat = fs.statSync(destPath);
+            if (await fs.existsSync(destPath)) {
+              const stat = await fs.statSync(destPath);
               if (stat.isDirectory()) {
-                  fs.rmdirSync(destPath, { recursive: true }); // remove directory recursively
+                  await fs.rmdirSync(destPath, { recursive: true }); // remove directory recursively
               } else if (stat.isFile()) {
-                  fs.unlinkSync(destPath); // remove file
+                  await fs.unlinkSync(destPath); // remove file
               }
             }
 
             // Copy file or directory recursively
-            fs.cpSync(sourcePath, destPath, { recursive: true });
+            await fs.cpSync(sourcePath, destPath, { recursive: true });
 
             copiedItems.push(item);
         }

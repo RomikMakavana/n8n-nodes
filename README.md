@@ -53,6 +53,21 @@ n8n-custom-nodes/
    DEST_PATH=/Users/yourusername/.n8n/custom
    ```
 
+   **Symlinks:** `npm run publish-local` creates symlinks from each built node under `dist/n8n-nodes/` into `DEST_PATH`. If a path already exists and is a symlink, the publish step checks that it points at the current build output. When something points elsewhere, you get a summary and a prompt (**Replace all incorrect symlinks? [y/N]**) in an interactive terminal. In non-interactive environments (for example CI), the task stops with an error unless you opt in to automatic fixes:
+
+   ```bash
+   PUBLISH_LOCAL_REPLACE_SYMLINKS=1 npm run publish-local
+   ```
+
+   Or run only the symlink step:
+
+   ```bash
+   PUBLISH_LOCAL_REPLACE_SYMLINKS=1 npx grunt symlinkValidated
+   npx grunt symlinkValidated --replace-symlinks
+   ```
+
+   If a name under `DEST_PATH` exists but is **not** a symlink (a normal file or directory), the task fails with an error so nothing is deleted by mistake.
+
 ## 🎯 Quick Start
 
 ### Creating a New Custom Node
@@ -135,7 +150,7 @@ n8n-custom-nodes/
 The Grunt build system automatically:
 1. Scans for compiled `.node.js` files
 2. Generates `package.json` for each node directory
-3. Creates symlinks to your local n8n custom directory
+3. Creates symlinks to your local n8n custom directory, reusing correct existing symlinks and validating targets (see **Symlinks** under configuration above)
 
 ### Example Generated Package.json
 ```json
@@ -181,6 +196,7 @@ The repository includes a complete example node (`DirCommand`) that demonstrates
    - Ensure n8n is restarted after publishing
    - Check that `DEST_PATH` points to correct directory
    - Verify symlinks were created successfully
+   - If publish reports a symlink target mismatch, either confirm the prompt to replace links or run with `PUBLISH_LOCAL_REPLACE_SYMLINKS=1` (or `npx grunt symlinkValidated --replace-symlinks`)
 
 2. **TypeScript compilation errors:**
    - Check `tsconfig.json` configuration

@@ -31,6 +31,18 @@ export class CopyDirectoryItems implements INodeType {
         description: 'Destination directory to copy items to',
     },
       {
+        displayName: 'Item Selection',
+        name: 'itemSelection',
+        type: 'options',
+        options: [
+          { name: 'All Items', value: 'all' },
+          { name: 'Selected Items', value: 'selected' },
+        ],
+        default: 'selected',
+        description:
+          'Copy every direct child of the source directory, or only the names listed below',
+    },
+      {
         displayName: 'Item To Copy',
         name: 'itemsToCopy',
         type: 'string',
@@ -40,6 +52,11 @@ export class CopyDirectoryItems implements INodeType {
         default: [],
         placeholder: 'Add Item To Copy',
         description: 'Enter each item to copy',
+        displayOptions: {
+          show: {
+            itemSelection: ['selected'],
+          },
+        },
     }
     ]
   };
@@ -51,11 +68,23 @@ export class CopyDirectoryItems implements INodeType {
     for (let i = 0; i < items.length; i++) {
         const sourceDirectory = this.getNodeParameter('sourceDirectory', i) as string;
         const destinationDirectory = this.getNodeParameter('destinationDirectory', i) as string;
-        const itemsToCopy = this.getNodeParameter('itemsToCopy', i, []) as string[];
+        const itemSelection = this.getNodeParameter('itemSelection', i) as string;
 
         // Check if source directory exists
         if (!await fs.existsSync(sourceDirectory)) {
             throw new Error(`Source directory does not exist: ${sourceDirectory}`);
+        }
+
+        let itemsToCopy: string[];
+        if (itemSelection === 'all') {
+            itemsToCopy = fs.readdirSync(sourceDirectory);
+        } else {
+            itemsToCopy = this.getNodeParameter('itemsToCopy', i, []) as string[];
+            if (itemsToCopy.length === 0) {
+                throw new Error(
+                    'No items selected: add at least one item in "Item To Copy" or choose "All Items".',
+                );
+            }
         }
 
         // Ensure destination directory exists
